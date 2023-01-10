@@ -1,10 +1,10 @@
 import React from 'react';
-import {Easing} from 'react-native';
+import { Easing } from 'react-native';
 import PropTypes from 'prop-types';
 
-import SymbolLayer from '../SymbolLayer';
+import { SymbolLayer } from '../SymbolLayer';
 import Animated from '../../utils/animated/Animated';
-import AnimatedMapPoint from '../../utils/animated/AnimatedPoint';
+import { AnimatedPoint } from '../../classes';
 
 class Annotation extends React.Component {
   static propTypes = {
@@ -35,7 +35,7 @@ class Annotation extends React.Component {
     const shape = this._getShapeFromProps(props);
 
     this.state = {
-      shape: props.animated ? new AnimatedMapPoint(shape) : shape,
+      shape: props.animated ? new AnimatedPoint(shape) : shape,
     };
 
     this.onPress = this.onPress.bind(this);
@@ -43,7 +43,7 @@ class Annotation extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!Array.isArray(this.props.coordinates)) {
-      this.setState({shape: null});
+      this.setState({ shape: null });
       return;
     }
 
@@ -70,7 +70,7 @@ class Annotation extends React.Component {
       const shape = this._getShapeFromProps(this.props);
 
       this.setState({
-        shape: this.props.animated ? new AnimatedMapPoint(shape) : shape,
+        shape: this.props.animated ? new AnimatedPoint(shape) : shape,
       });
     }
   }
@@ -84,7 +84,7 @@ class Annotation extends React.Component {
   _getShapeFromProps(props = {}) {
     const lng = props.coordinates[0] || 0;
     const lat = props.coordinates[1] || 0;
-    return {type: 'Point', coordinates: [lng, lat]};
+    return { type: 'Point', coordinates: [lng, lat] };
   }
 
   get symbolStyle() {
@@ -106,7 +106,8 @@ class Annotation extends React.Component {
         id={this.props.id}
         ref="source"
         onPress={this.onPress}
-        shape={this.state.shape}>
+        shape={this.state.shape}
+      >
         {this.symbolStyle && (
           <SymbolLayer
             id={`${this.props.id}-symbol`}

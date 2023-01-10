@@ -1,5 +1,5 @@
 import React from 'react';
-import MapboxGL from '@react-native-mapbox-gl/maps';
+import MapboxGL from '@rnmapbox/maps';
 
 import sheet from '../../styles/sheet';
 import BaseExamplePropTypes from '../common/BaseExamplePropTypes';
@@ -73,7 +73,8 @@ class ChoroplethLayerByZoomLevel extends React.PureComponent {
       <Page {...this.props}>
         <MapboxGL.MapView
           styleURL={MapboxGL.StyleURL.Light}
-          style={sheet.matchParent}>
+          style={sheet.matchParent}
+        >
           <MapboxGL.Camera
             centerCoordinate={[-98, 38.88]}
             zoomLevel={3}
@@ -82,7 +83,8 @@ class ChoroplethLayerByZoomLevel extends React.PureComponent {
 
           <MapboxGL.VectorSource
             id="population"
-            url={'mapbox://mapbox.660ui7x6'}>
+            url={'mapbox://mapbox.660ui7x6'}
+          >
             <MapboxGL.FillLayer
               id="state-population"
               sourceLayerID="state_county_population_2014_cen"

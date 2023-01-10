@@ -1,5 +1,5 @@
 import React from 'react';
-import MapboxGL from '@react-native-mapbox-gl/maps';
+import MapboxGL from '@rnmapbox/maps';
 
 import sheet from '../../styles/sheet';
 import exampleIcon from '../../assets/example.png';
@@ -85,7 +85,7 @@ class ShapeSourceIcon extends React.Component {
   };
 
   render() {
-    const {images} = this.state;
+    const { images } = this.state;
 
     return (
       <Page {...this.props}>
@@ -97,15 +97,16 @@ class ShapeSourceIcon extends React.Component {
           <MapboxGL.Images
             nativeAssetImages={['pin']}
             images={images}
-            onImageMissing={imageKey =>
+            onImageMissing={(imageKey) =>
               this.setState({
-                images: {...this.state.images, [imageKey]: pinIcon},
+                images: { ...this.state.images, [imageKey]: pinIcon },
               })
             }
           />
           <MapboxGL.ShapeSource
             id="exampleShapeSource"
-            shape={featureCollection}>
+            shape={featureCollection}
+          >
             <MapboxGL.SymbolLayer id="exampleIconName" style={styles.icon} />
           </MapboxGL.ShapeSource>
         </MapboxGL.MapView>

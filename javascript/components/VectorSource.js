@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {NativeModules, requireNativeComponent} from 'react-native';
+import { NativeModules, requireNativeComponent } from 'react-native';
 
 import {
   cloneReactChildrenWithProps,
@@ -8,8 +8,8 @@ import {
   isFunction,
   isAndroid,
 } from '../utils';
-import {getFilter} from '../utils/filterUtils';
-import {copyPropertiesAsDeprecated} from '../utils/deprecation';
+import { getFilter } from '../utils/filterUtils';
+import { copyPropertiesAsDeprecated } from '../utils/deprecation';
 
 import AbstractSource from './AbstractSource';
 import NativeBridgeComponent from './NativeBridgeComponent';
@@ -22,7 +22,10 @@ export const NATIVE_MODULE_NAME = 'RCTMGLVectorSource';
  * VectorSource is a map content source that supplies tiled vector data in Mapbox Vector Tile format to be shown on the map.
  * The location of and metadata about the tiles are defined either by an option dictionary or by an external file that conforms to the TileJSON specification.
  */
-class VectorSource extends NativeBridgeComponent(AbstractSource) {
+class VectorSource extends NativeBridgeComponent(
+  AbstractSource,
+  NATIVE_MODULE_NAME,
+) {
   static propTypes = {
     ...viewPropTypes,
 
@@ -98,7 +101,7 @@ class VectorSource extends NativeBridgeComponent(AbstractSource) {
   };
 
   constructor(props) {
-    super(props, NATIVE_MODULE_NAME);
+    super(props);
   }
 
   _setNativeRef(nativeRef) {
@@ -134,7 +137,7 @@ class VectorSource extends NativeBridgeComponent(AbstractSource) {
   onPress(event) {
     const {
       nativeEvent: {
-        payload: {features, coordinates, point},
+        payload: { features, coordinates, point },
       },
     } = event;
     let newEvent = {
@@ -145,13 +148,13 @@ class VectorSource extends NativeBridgeComponent(AbstractSource) {
     newEvent = copyPropertiesAsDeprecated(
       event,
       newEvent,
-      key => {
+      (key) => {
         console.warn(
           `event.${key} is deprecated on VectorSource#onPress, please use event.features`,
         );
       },
       {
-        nativeEvent: origNativeEvent => ({
+        nativeEvent: (origNativeEvent) => ({
           ...origNativeEvent,
           payload: features[0],
         }),
@@ -173,11 +176,11 @@ class VectorSource extends NativeBridgeComponent(AbstractSource) {
       hasPressListener: isFunction(this.props.onPress),
       onMapboxVectorSourcePress: this.onPress.bind(this),
       onPress: undefined,
-      ref: nativeRef => this._setNativeRef(nativeRef),
+      ref: (nativeRef) => this._setNativeRef(nativeRef),
       onAndroidCallback: isAndroid() ? this._onAndroidCallback : undefined,
     };
     return (
-      <RCTMGLVectorSource ref="nativeSource" {...props}>
+      <RCTMGLVectorSource ref={this.setNativeRef} {...props}>
         {cloneReactChildrenWithProps(this.props.children, {
           sourceID: this.props.id,
         })}

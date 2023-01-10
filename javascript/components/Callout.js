@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import {viewPropTypes} from '../utils';
+import { viewPropTypes } from '../utils';
 
 export const NATIVE_MODULE_NAME = 'RCTMGLCallout';
 
@@ -56,7 +56,7 @@ class Callout extends React.PureComponent {
     ...viewPropTypes,
 
     /**
-     * String that get's displayed in the default callout.
+     * String that gets displayed in the default callout.
      */
     title: PropTypes.string,
 

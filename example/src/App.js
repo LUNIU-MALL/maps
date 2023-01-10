@@ -1,16 +1,15 @@
 import React from 'react';
-import MapboxGL from '@react-native-mapbox-gl/maps';
-import {StyleSheet, Text, View, LogBox, SafeAreaView} from 'react-native';
-import {createStackNavigator, TransitionPresets} from 'react-navigation-stack';
-import {createAppContainer} from 'react-navigation';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MapboxGL from '@rnmapbox/maps';
+import { StyleSheet, Text, View, LogBox, SafeAreaView } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 
 import sheet from './styles/sheet';
 import colors from './styles/colors';
-import {IS_ANDROID} from './utils';
+import { IS_ANDROID } from './utils';
 import config from './utils/config';
-import Home from './scenes/Home';
-import Demo from './scenes/Demo';
+import { Group, Item } from './scenes/GroupAndItem';
+import { ScreenWithoutMap } from './scenes/ScreenWithoutMap';
 
 LogBox.ignoreLogs([
   'Warning: isMounted(...) is deprecated',
@@ -26,27 +25,26 @@ const styles = StyleSheet.create({
 
 MapboxGL.setAccessToken(config.get('accessToken'));
 
-Icon.loadFont();
+const Stack = createNativeStackNavigator();
 
-const AppStackNavigator = createStackNavigator(
-  {
-    Home: {screen: Home},
-    Demo: {screen: Demo},
-    Group: {screen: Home},
-  },
-  {
-    initialRouteName: 'Home',
+function AppStackNavigator() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Group"
+      screenOptions={{ gestureEnabled: false, headerShown: false }}
+    >
+      <Stack.Screen name="Group" component={Group} />
+      <Stack.Screen name="Item" component={Item} />
+      <Stack.Screen name="ScreenWithoutMap" component={ScreenWithoutMap} />
+    </Stack.Navigator>
+  );
+}
 
-    navigationOptions: {
-      ...TransitionPresets.SlideFromRightIOS,
-    },
-    defaultNavigationOptions: {
-      headerShown: false,
-    },
-  },
+const AppContainer = () => (
+  <NavigationContainer>
+    <AppStackNavigator />
+  </NavigationContainer>
 );
-const AppContainer = createAppContainer(AppStackNavigator);
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -75,8 +73,9 @@ class App extends React.Component {
       }
       return (
         <SafeAreaView
-          style={[sheet.matchParent, {backgroundColor: colors.primary.blue}]}
-          forceInset={{top: 'always'}}>
+          style={[sheet.matchParent, { backgroundColor: colors.primary.blue }]}
+          forceInset={{ top: 'always' }}
+        >
           <View style={sheet.matchParent}>
             <Text style={styles.noPermissionsText}>
               You need to accept location permissions in order to use this

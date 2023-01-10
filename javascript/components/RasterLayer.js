@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {NativeModules, requireNativeComponent} from 'react-native';
+import { NativeModules, requireNativeComponent } from 'react-native';
 
-import {viewPropTypes} from '../utils';
-import {RasterLayerStyleProp} from '../utils/styleMap';
+import { viewPropTypes } from '../utils';
+import { RasterLayerStyleProp } from '../utils/styleMap';
 
 import AbstractLayer from './AbstractLayer';
 
@@ -21,7 +21,9 @@ class RasterLayer extends AbstractLayer {
     id: PropTypes.string.isRequired,
 
     /**
-     * The source from which to obtain the data to style. If the source has not yet been added to the current style, the behavior is undefined.
+     * The source from which to obtain the data to style.
+     * If the source has not yet been added to the current style, the behavior is undefined.
+     * Inferred from parent source only if the layer is a direct child to it.
      */
     sourceID: PropTypes.string,
 
@@ -78,7 +80,7 @@ class RasterLayer extends AbstractLayer {
       ...this.baseProps,
       sourceLayerID: this.props.sourceLayerID,
     };
-    return <RCTMGLRasterLayer ref="nativeLayer" {...props} />;
+    return <RCTMGLRasterLayer ref={this.setNativeLayer} {...props} />;
   }
 }
 
@@ -86,7 +88,7 @@ const RCTMGLRasterLayer = requireNativeComponent(
   NATIVE_MODULE_NAME,
   RasterLayer,
   {
-    nativeOnly: {reactStyle: true},
+    nativeOnly: { reactStyle: true },
   },
 );
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {NativeModules, requireNativeComponent} from 'react-native';
+import { NativeModules, requireNativeComponent } from 'react-native';
 
-import {viewPropTypes} from '../utils';
-import {BackgroundLayerStyleProp} from '../utils/styleMap';
+import { viewPropTypes } from '../utils';
+import { BackgroundLayerStyleProp } from '../utils/styleMap';
 
 import AbstractLayer from './AbstractLayer';
 
@@ -21,7 +21,9 @@ class BackgroundLayer extends AbstractLayer {
     id: PropTypes.string.isRequired,
 
     /**
-     * The source from which to obtain the data to style. If the source has not yet been added to the current style, the behavior is undefined.
+     * The source from which to obtain the data to style.
+     * If the source has not yet been added to the current style, the behavior is undefined.
+     * Inferred from parent source only if the layer is a direct child to it.
      */
     sourceID: PropTypes.string,
 
@@ -77,7 +79,7 @@ class BackgroundLayer extends AbstractLayer {
     return (
       <RCTMGLBackgroundLayer
         testID="rctmglBackgroundLayer"
-        ref="nativeLayer"
+        ref={this.setNativeLayer}
         {...this.baseProps}
       />
     );
@@ -88,7 +90,7 @@ const RCTMGLBackgroundLayer = requireNativeComponent(
   NATIVE_MODULE_NAME,
   BackgroundLayer,
   {
-    nativeOnly: {reactStyle: true},
+    nativeOnly: { reactStyle: true },
   },
 );
 

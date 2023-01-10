@@ -1,8 +1,8 @@
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 
 function keyMirror(keys) {
   const obj = {};
-  keys.forEach(key => (obj[key] = key));
+  keys.forEach((key) => (obj[key] = key));
   return obj;
 }
 
@@ -33,6 +33,7 @@ NativeModules.MGLModule = {
     'RegionDidChange',
     'WillStartLoadingMap',
     'DidFinishLoadingMap',
+    'DidFinishRenderingMapFully',
     'DidFailLoadingMap',
     'WillStartRenderingFrame',
     'DidFinishRenderingFrame',
@@ -40,7 +41,7 @@ NativeModules.MGLModule = {
     'DidFinishLoadingStyle',
     'SetCameraComplete',
   ]),
-  CameraModes: keyMirror(['Flight', 'Ease', 'None']),
+  CameraModes: keyMirror(['Flight', 'Ease', 'Linear', 'None', 'Move']),
   StyleSource: keyMirror(['DefaultSourceID']),
   InterpolationMode: keyMirror([
     'Exponential',
@@ -80,6 +81,7 @@ NativeModules.MGLModule = {
   OfflineCallbackName: keyMirror(['Progress', 'Error']),
 
   // methods
+  setWellKnownTileServer: jest.fn(),
   setAccessToken: jest.fn(),
   getAccessToken: () => Promise.resolve('test-token'),
   setTelemetryEnabled: jest.fn(),
@@ -87,15 +89,16 @@ NativeModules.MGLModule = {
 };
 
 NativeModules.MGLOfflineModule = {
-  createPack: packOptions => {
+  createPack: (packOptions) => {
     return Promise.resolve({
       bounds: packOptions.bounds,
-      metadata: JSON.stringify({name: packOptions.name}),
+      metadata: JSON.stringify({ name: packOptions.name }),
     });
   },
   getPacks: () => Promise.resolve([]),
   deletePack: () => Promise.resolve(),
   getPackStatus: () => Promise.resolve({}),
+  migrateOfflineCache: () => Promise.resolve({}),
   pausePackDownload: () => Promise.resolve(),
   resumePackDownload: () => Promise.resolve(),
   setPackObserver: () => Promise.resolve(),

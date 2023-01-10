@@ -1,9 +1,9 @@
-import React, {useMemo, useState, useEffect} from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import CircleLayer from './CircleLayer';
 import RasterLayer from './RasterLayer';
-import SymbolLayer from './SymbolLayer';
+import { SymbolLayer } from './SymbolLayer';
 import LineLayer from './LineLayer';
 import FillLayer from './FillLayer';
 import FillExtrusionLayer from './FillExtrusionLayer';
@@ -12,10 +12,10 @@ import HeatmapLayer from './HeatmapLayer';
 import VectorSource from './VectorSource';
 import RasterSource from './RasterSource';
 import ImageSource from './ImageSource';
-import ShapeSource from './ShapeSource';
+import { ShapeSource } from './ShapeSource';
 
 function toCamelCase(s) {
-  return s.replace(/([-_][a-z])/gi, $1 => {
+  return s.replace(/([-_][a-z])/gi, ($1) => {
     return $1.toUpperCase().replace('-', '').replace('_', '');
   });
 }
@@ -27,7 +27,7 @@ function toCamelCaseKeys(oldObj) {
     return {};
   }
   const newObj = {};
-  Object.keys(oldObj).forEach(key => {
+  Object.keys(oldObj).forEach((key) => {
     const value = oldObj[key];
     if (key.includes('-')) {
       newObj[toCamelCase(key)] = value;
@@ -39,7 +39,7 @@ function toCamelCaseKeys(oldObj) {
 }
 
 function getLayerComponentType(layer) {
-  const {type} = layer;
+  const { type } = layer;
 
   switch (type) {
     case 'circle':
@@ -124,12 +124,12 @@ function getTileSourceProps(source) {
 }
 
 function getVectorSource(id, source) {
-  const sourceProps = {...getTileSourceProps(source)};
+  const sourceProps = { ...getTileSourceProps(source) };
   return <VectorSource key={id} id={id} {...sourceProps} />;
 }
 
 function getRasterSource(id, source) {
-  const sourceProps = {...getTileSourceProps(source)};
+  const sourceProps = { ...getTileSourceProps(source) };
   if (source.tileSize) {
     sourceProps.tileSize = source.tileSize;
   }
@@ -163,6 +163,9 @@ function getShapeSource(id, source) {
   if (source.clusterMaxZoom !== undefined) {
     sourceProps.clusterMaxZoomLevel = source.clusterMaxZoom;
   }
+  if (source.clusterProperties !== undefined) {
+    sourceProps.clusterProperties = source.clusterProperties;
+  }
   if (source.buffer !== undefined) {
     sourceProps.buffer = source.buffer;
   }
@@ -195,9 +198,9 @@ function asSourceComponent(id, source) {
 /**
  * Style is a component that automatically adds sources / layers to the map using Mapbox GL Style Spec.
  * Only [`sources`](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources) & [`layers`](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/) are supported.
- * Other fields such as `sprites`, `glyphs` etc. will be ignored. Not all layer / source attributes from the style spec are supported, in general the supported attributes will mentioned under https://github.com/react-native-mapbox-gl/maps/tree/master/docs.
+ * Other fields such as `sprites`, `glyphs` etc. will be ignored. Not all layer / source attributes from the style spec are supported, in general the supported attributes will be mentioned under https://github.com/rnmapbox/maps/tree/main/docs.
  */
-const Style = props => {
+const Style = (props) => {
   const [fetchedJson, setFetchedJson] = useState({});
   const json = typeof props.json === 'object' ? props.json : fetchedJson;
 
@@ -231,7 +234,7 @@ const Style = props => {
     if (!json.layers) {
       return [];
     }
-    return json.layers.map(asLayerComponent).filter(x => !!x);
+    return json.layers.map(asLayerComponent).filter((x) => !!x);
   }, [json.layers]);
 
   // Extract source components from json
@@ -240,8 +243,8 @@ const Style = props => {
       return [];
     }
     return Object.keys(json.sources)
-      .map(id => asSourceComponent(id, json.sources[id]))
-      .filter(x => !!x);
+      .map((id) => asSourceComponent(id, json.sources[id]))
+      .filter((x) => !!x);
   }, [json.sources]);
 
   return (

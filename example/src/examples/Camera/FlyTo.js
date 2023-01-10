@@ -1,6 +1,6 @@
 import React from 'react';
-import {Alert} from 'react-native';
-import MapboxGL from '@react-native-mapbox-gl/maps';
+import { Alert } from 'react-native';
+import MapboxGL from '@rnmapbox/maps';
 
 import sheet from '../../styles/sheet';
 import BaseExamplePropTypes from '../common/BaseExamplePropTypes';
@@ -55,11 +55,11 @@ class FlyTo extends React.Component {
     };
 
     this._flyToOptions = [
-      {label: 'SF', data: FlyTo.SF_OFFICE_LOCATION},
-      {label: 'DC', data: FlyTo.DC_OFFICE_LOCATION},
-      {label: '0,0', data: FlyTo.ZERO_ZERO},
-      {label: '0,10', data: FlyTo.ZERO_TEN},
-      {label: '10,0', data: FlyTo.TEN_ZERO},
+      { label: 'SF', data: FlyTo.SF_OFFICE_LOCATION },
+      { label: 'DC', data: FlyTo.DC_OFFICE_LOCATION },
+      { label: '0,0', data: FlyTo.ZERO_ZERO },
+      { label: '0,10', data: FlyTo.ZERO_TEN },
+      { label: '10,0', data: FlyTo.TEN_ZERO },
     ];
 
     this.onFlyToPress = this.onFlyToPress.bind(this);
@@ -67,7 +67,7 @@ class FlyTo extends React.Component {
   }
 
   onFlyToPress(i) {
-    this.setState({location: this._flyToOptions[i].data});
+    this.setState({ location: this._flyToOptions[i].data });
   }
 
   onFlyToComplete() {
@@ -79,7 +79,8 @@ class FlyTo extends React.Component {
       <TabBarPage
         {...this.props}
         options={this._flyToOptions}
-        onOptionPress={this.onFlyToPress}>
+        onOptionPress={this.onFlyToPress}
+      >
         <MapboxGL.MapView style={sheet.matchParent}>
           <MapboxGL.Camera
             zoomLevel={16}

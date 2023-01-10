@@ -1,23 +1,36 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+$RNMapboxMapsImpl = 'mapbox' # mapbox-gl, maplibre
 
-useMapLibre = false
+if ENV['CI_MAP_IMPL']
+  fail "Invalid CI_MAP_IMPL value" unless ["maplibre", "mapbox-gl", "mapbox"].include?(ENV['CI_MAP_IMPL'])
 
-if useMapLibre
-  $RNMBGL_Use_SPM = {
+  $RNMapboxMapsImpl = ENV['CI_MAP_IMPL']
+end
+
+if $RNMapboxMapsImpl == 'mapbox'
+  platform :ios, '13.0'
+else
+  platform :ios, '12.4'
+end
+
+install! 'cocoapods', :deterministic_uuids => false
+
+production = ENV["PRODUCTION"] == "1"
+
+if $RNMapboxMapsImpl == 'maplibre'
+  $RNMapboxMapsSwiftPackageManager = {
     url: "https://github.com/maplibre/maplibre-gl-native-distribution",
     requirement: {
       kind: "upToNextMajorVersion",
-      minimumVersion: "5.11.0"
+      minimumVersion: "5.12.1"
     },
     product_name: "Mapbox"
   }
-  $RNMGL_USE_MAPLIBRE = true
 end
 
-# We ingore warning except for RNMBGL
+# We ignore warning except for RNMapboxMaps
 INHIBIT_WARNING_BY_DEFAULT = true
 
 if INHIBIT_WARNING_BY_DEFAULT
@@ -37,39 +50,58 @@ end
 
 target 'RNMapboxGLExample' do
   config = use_native_modules!
+
+  # Flags change depending on the env values.
+  flags = get_default_flags()
+
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => false
+    :production => production,
+    :hermes_enabled => flags[:hermes_enabled],
+    :fabric_enabled => flags[:fabric_enabled],
+    :flipper_configuration => FlipperConfiguration.enabled,
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
   # default version
-  pod 'react-native-mapbox-gl', :path => '../../', :inhibit_warnings => false
+  pod 'rnmapbox-maps', :path => '../../', :inhibit_warnings => false
 
   use_native_modules!
 
   pre_install do |installer|
-    $RNMBGL.pre_install(installer)
+    $RNMapboxMaps.pre_install(installer)
   end
 
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable these next few lines.
+  def disable_optimizations_in_release(installer)
+    installer.pods_project.build_configurations.each do |config|
+      if config.name.include?("Release")
+        config.build_settings['GCC_OPTIMIZATION_LEVEL'] = '0'
+        config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Onone'
+        config.build_settings['SWIFT_COMPILATION_MODE'] = 'singlefile'
+      end
+    end
+  end
+
   if !ENV['CI']
-    # local configuration
-    use_flipper!()
     post_install do |installer|
+      installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+          config.build_settings["ONLY_ACTIVE_ARCH"] = "NO"
+        end
+      end
       react_native_post_install(installer)
-      __apply_Xcode_12_5_M1_post_install_workaround(installer)
-      $RNMBGL.post_install(installer)
+      __apply_Xcode_12_5_M1_post_install_workaround(installer) if defined?(__apply_Xcode_12_5_M1_post_install_workaround)
+      $RNMapboxMaps.post_install(installer)
     end
   else
     # CI configuration
     post_install do |installer|
       react_native_post_install(installer)
-      __apply_Xcode_12_5_M1_post_install_workaround(installer)
-      $RNMBGL.post_install(installer)
+      __apply_Xcode_12_5_M1_post_install_workaround(installer) if defined?(__apply_Xcode_12_5_M1_post_install_workaround)
+      disable_optimizations_in_release(installer)
+      $RNMapboxMaps.post_install(installer)
     end
   end
 end

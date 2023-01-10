@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {NativeModules, requireNativeComponent} from 'react-native';
+import { NativeModules, requireNativeComponent } from 'react-native';
 
-import {viewPropTypes} from '../utils';
-import {FillExtrusionLayerStyleProp} from '../utils/styleMap';
+import { viewPropTypes } from '../utils';
+import { FillExtrusionLayerStyleProp } from '../utils/styleMap';
 
 import AbstractLayer from './AbstractLayer';
 
@@ -24,7 +24,9 @@ class FillExtrusionLayer extends AbstractLayer {
     id: PropTypes.string.isRequired,
 
     /**
-     * The source from which to obtain the data to style. If the source has not yet been added to the current style, the behavior is undefined.
+     * The source from which to obtain the data to style.
+     * If the source has not yet been added to the current style, the behavior is undefined.
+     * Inferred from parent source only if the layer is a direct child to it.
      */
     sourceID: PropTypes.string,
 
@@ -81,7 +83,7 @@ class FillExtrusionLayer extends AbstractLayer {
       ...this.baseProps,
       sourceLayerID: this.props.sourceLayerID,
     };
-    return <RCTMGLFillExtrusionLayer ref="nativeLayer" {...props} />;
+    return <RCTMGLFillExtrusionLayer ref={this.setNativeLayer} {...props} />;
   }
 }
 
@@ -89,7 +91,7 @@ const RCTMGLFillExtrusionLayer = requireNativeComponent(
   NATIVE_MODULE_NAME,
   FillExtrusionLayer,
   {
-    nativeOnly: {reactStyle: true},
+    nativeOnly: { reactStyle: true },
   },
 );
 

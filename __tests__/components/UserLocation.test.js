@@ -1,8 +1,8 @@
 import React from 'react';
-import {render, fireEvent} from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 
 import UserLocation from '../../javascript/components/UserLocation';
-import ShapeSource from '../../javascript/components/ShapeSource';
+import { ShapeSource } from '../../javascript/components/ShapeSource';
 import CircleLayer from '../../javascript/components/CircleLayer';
 import locationManager from '../../javascript/modules/location/locationManager';
 
@@ -29,38 +29,37 @@ describe('UserLocation', () => {
     jest.spyOn(locationManager, 'addListener');
 
     jest.spyOn(locationManager, 'removeListener');
+    jest
+      .spyOn(locationManager, 'setMinDisplacement')
+      .mockImplementation(jest.fn());
 
     beforeEach(() => {
       jest.clearAllMocks();
     });
 
-    test('renders with CircleLayers by default', done => {
-      const {UNSAFE_getAllByType} = render(<UserLocation />);
+    test('renders with CircleLayers by default', async () => {
+      const { UNSAFE_getAllByType } = await render(<UserLocation />);
 
-      setTimeout(() => {
-        const shapeSource = UNSAFE_getAllByType(ShapeSource);
-        const circleLayer = UNSAFE_getAllByType(CircleLayer);
+      const shapeSource = UNSAFE_getAllByType(ShapeSource);
+      const circleLayer = UNSAFE_getAllByType(CircleLayer);
 
-        expect(shapeSource.length).toBe(1);
-        expect(circleLayer.length).toBe(3);
-        done();
-      });
+      expect(shapeSource.length).toBe(1);
+      expect(circleLayer.length).toBe(3);
     });
 
-    test('does not render with visible set to false', done => {
-      const {UNSAFE_queryByType} = render(<UserLocation visible={false} />);
+    test('does not render with visible set to false', async () => {
+      const { UNSAFE_queryByType } = await render(
+        <UserLocation visible={false} />,
+      );
 
-      setTimeout(() => {
-        const shapeSource = UNSAFE_queryByType(ShapeSource);
-        const circleLayer = UNSAFE_queryByType(CircleLayer);
+      const shapeSource = UNSAFE_queryByType(ShapeSource);
+      const circleLayer = UNSAFE_queryByType(CircleLayer);
 
-        expect(shapeSource).toEqual(null);
-        expect(circleLayer).toEqual(null);
-        done();
-      });
+      expect(shapeSource).toEqual(null);
+      expect(circleLayer).toEqual(null);
     });
 
-    test('renders with CustomChild when provided', done => {
+    test('renders with CustomChild when provided', async () => {
       const circleLayerProps = {
         key: 'testUserLocationCircle',
         id: 'testUserLocationCircle',
@@ -72,23 +71,20 @@ describe('UserLocation', () => {
         },
       };
 
-      const {UNSAFE_queryByType, UNSAFE_queryAllByType} = render(
+      const { UNSAFE_queryByType, UNSAFE_queryAllByType } = await render(
         <UserLocation>
           <CircleLayer {...circleLayerProps} />
         </UserLocation>,
       );
 
-      setTimeout(() => {
-        const shapeSource = UNSAFE_queryByType(ShapeSource);
-        const circleLayer = UNSAFE_queryAllByType(CircleLayer);
+      const shapeSource = UNSAFE_queryByType(ShapeSource);
+      const circleLayer = UNSAFE_queryAllByType(CircleLayer);
 
-        expect(shapeSource).toBeDefined();
-        expect(circleLayer[0]).toBeDefined();
-        expect(circleLayer.length).toBe(1);
+      expect(shapeSource).toBeDefined();
+      expect(circleLayer[0]).toBeDefined();
+      expect(circleLayer.length).toBe(1);
 
-        expect(circleLayer[0].props.style).toEqual(circleLayerProps.style);
-        done();
-      });
+      expect(circleLayer[0].props.style).toEqual(circleLayerProps.style);
     });
 
     test('calls onUpdate callback when new location is received', () => {
@@ -115,7 +111,7 @@ describe('UserLocation', () => {
     test('calls onPress callback when location icon is pressed', () => {
       const onPressCallback = jest.fn();
 
-      const {UNSAFE_queryByType} = render(
+      const { UNSAFE_queryByType } = render(
         <UserLocation onPress={onPressCallback} />,
       );
 
@@ -126,7 +122,7 @@ describe('UserLocation', () => {
     });
 
     test('correctly unmounts', async () => {
-      const {unmount} = render(<UserLocation />);
+      const { unmount } = render(<UserLocation />);
 
       expect(locationManager.addListener).toHaveBeenCalled();
       expect(locationManager.removeListener).not.toHaveBeenCalled();
@@ -179,7 +175,7 @@ describe('UserLocation', () => {
 
         expect(ul.locationManagerRunning).toStrictEqual(false);
 
-        await ul.setLocationManager({running: true});
+        await ul.setLocationManager({ running: true });
 
         expect(ul.locationManagerRunning).toStrictEqual(true);
         expect(locationManager.start).toHaveBeenCalledTimes(1);
@@ -195,11 +191,11 @@ describe('UserLocation', () => {
       test('called with "running" false', async () => {
         // start
         expect(ul.locationManagerRunning).toStrictEqual(false);
-        await ul.setLocationManager({running: true});
+        await ul.setLocationManager({ running: true });
         expect(ul.locationManagerRunning).toStrictEqual(true);
 
         // stop
-        await ul.setLocationManager({running: false});
+        await ul.setLocationManager({ running: false });
 
         expect(ul.locationManagerRunning).toStrictEqual(false);
         // only once from start

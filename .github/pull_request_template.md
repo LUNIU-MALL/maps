@@ -18,11 +18,9 @@ Added `your feature` that allows ...
 <!-- Check completed item: [X] -->
 
 - [ ] I have tested this on a device/simulator for each compatible OS
-- [ ] I formatted JS and TS files with running `yarn lint:fix` in the root folder
 - [ ] I updated the documentation with running `yarn generate` in the root folder
-- [ ] I mentioned this change in `CHANGELOG.md`
-- [ ] I updated the typings files (`index.d.ts`)
-- [ ] I added/ updated a sample (`/example`)
+- [ ] I updated the typings files - if js interface was changed (`index.d.ts`)
+- [ ] I added/ updated a sample - if a new feature was implemented (`/example`)
 
 ## Screenshot OR Video
 

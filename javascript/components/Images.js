@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {requireNativeComponent} from 'react-native';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import { requireNativeComponent, Image } from 'react-native';
 
-import {viewPropTypes} from '../utils';
+import { viewPropTypes } from '../utils';
 
-import ShapeSource from './ShapeSource';
+import { ShapeSource } from './ShapeSource';
 
 export const NATIVE_MODULE_NAME = 'RCTMGLImages';
 
@@ -22,7 +21,7 @@ function _isUrlOrPath(value) {
 }
 
 /**
- * Images defines the images used in Symbol etc layers
+ * Images defines the images used in Symbol etc. layers.
  */
 class Images extends React.Component {
   static NATIVE_ASSETS_KEY = 'assets';
@@ -73,7 +72,7 @@ class Images extends React.Component {
         } else if (_isUrlOrPath(value)) {
           images[imageName] = value;
         } else {
-          const res = resolveAssetSource(value);
+          const res = Image.resolveAssetSource(value);
           if (res && res.uri) {
             images[imageName] = res;
           }

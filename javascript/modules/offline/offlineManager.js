@@ -1,6 +1,6 @@
-import {NativeModules, NativeEventEmitter} from 'react-native';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 
-import {isUndefined, isFunction, isAndroid} from '../../utils';
+import { isUndefined, isFunction, isAndroid } from '../../utils';
 
 import OfflineCreatePackOptions from './OfflineCreatePackOptions';
 import OfflinePack from './OfflinePack';
@@ -148,6 +148,19 @@ class OfflineManager {
   }
 
   /**
+   * Migrates the offline cache from pre-v10 SDKs to the new v10 cache location
+   *
+   * @example
+   * await MapboxGL.offlineManager.migrateOfflineCache()
+   *
+   * @return {void}
+   */
+  async migrateOfflineCache() {
+    await this._initialize();
+    await MapboxGLOfflineManager.migrateOfflineCache();
+  }
+
+  /**
    * Sets the maximum size of the ambient cache in bytes. Disables the ambient cache if set to 0.
    * This method may be computationally expensive because it will erase resources from the ambient cache if its size is decreased.
    *
@@ -186,7 +199,7 @@ class OfflineManager {
   async getPacks() {
     await this._initialize();
     return Object.keys(this._offlinePacks).map(
-      name => this._offlinePacks[name],
+      (name) => this._offlinePacks[name],
     );
   }
 
@@ -341,7 +354,7 @@ class OfflineManager {
   }
 
   _onProgress(e) {
-    const {name, state} = e.payload;
+    const { name, state } = e.payload;
 
     if (!this._hasListeners(name, this._progressListeners)) {
       return;
@@ -357,7 +370,7 @@ class OfflineManager {
   }
 
   _onError(e) {
-    const {name} = e.payload;
+    const { name } = e.payload;
 
     if (!this._hasListeners(name, this._errorListeners)) {
       return;

@@ -29,12 +29,16 @@ describe('Public Interface', () => {
       'SymbolLayer',
       'BackgroundLayer',
       'RasterLayer',
+      'SkyLayer',
+      'Terrain',
+      'Atmosphere',
 
       // sources
       'VectorSource',
       'ShapeSource',
       'RasterSource',
       'ImageSource',
+      'RasterDemSource',
       'Images',
 
       // constants
@@ -69,24 +73,29 @@ describe('Public Interface', () => {
       'OfflineCallbackName',
 
       // methods
+      'setWellKnownTileServer',
       'setAccessToken',
       'getAccessToken',
       'setTelemetryEnabled',
       'setConnected',
       'requestAndroidLocationPermissions',
+      'getAnnotationsLayerID',
 
       // animated
       'Animated',
 
-      // helpers
+      // classes
       'AnimatedPoint',
+      'AnimatedMapPoint',
       'AnimatedCoordinatesArray',
       'AnimatedShape',
       'AnimatedExtractCoordinateFromArray',
       'AnimatedRouteCoordinatesArray',
+
+      // helpers
       'Logger',
       'Style',
     ];
-    actualKeys.forEach(key => expect(expectedKeys).toContain(key));
+    actualKeys.forEach((key) => expect(expectedKeys).toContain(key));
   });
 });

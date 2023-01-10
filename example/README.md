@@ -1,18 +1,18 @@
 
 <p align="center">
-  <a href="https://github.com/react-native-mapbox-gl/maps/blob/master/example/src/examples/ChoroplethLayerByZoomLevel.js">
+  <a href="https://github.com/rnmapbox/maps/blob/main/example/src/examples/FillRasterLayer/ChoroplethLayerByZoomLevel.js">
     <img  src="readme_assets/example_choropleth_layer.png"  width="175"/>
   </a>
-  <a href="https://github.com/react-native-mapbox-gl/maps/blob/master/example/src/examples/EarthQuakes.js">
+  <a href="https://github.com/rnmapbox/maps/blob/main/example/src/examples/SymbolCircleLayer/Earthquakes.tsx">
     <img  src="readme_assets/example_clustering_earthquakes.png" width="175"/>
   </a>
-  <a href="https://github.com/react-native-mapbox-gl/maps/blob/master/example/src/examples/Annotations/CustomCallout.tsx">
+  <a href="https://github.com/rnmapbox/maps/blob/main/example/src/examples/Annotations/CustomCallout.tsx">
     <img  src="readme_assets/example_custom_callout.png" width="175"/>
   </a>
-  <a href="https://github.com/react-native-mapbox-gl/maps/blob/master/example/src/examples/DataDrivenCircleColors.js">
+  <a href="https://github.com/rnmapbox/maps/blob/main/example/src/examples/SymbolCircleLayer/DataDrivenCircleColors.js">
     <img  src="readme_assets/example_data_driven_circle_colors.png" width="175"/>
   </a>
-  <a href="https://github.com/react-native-mapbox-gl/maps/blob/master/example/src/examples/ImageOverlay.js">
+  <a href="https://github.com/rnmapbox/maps/blob/main/example/src/examples/FillRasterLayer/ImageOverlay.js">
     <img  src="readme_assets/example_image_overlay.png" width="175"/>
   </a>
 </p>
@@ -26,9 +26,9 @@
 
 # React Native Mapbox GL Demo
 
-Demo Application for [React Native Mapbox GL](../README.md)
+Demo Application for [React Native Mapbox GL](../README.md) using the `maplibre` implementation.
 
-*Note:* this app is using [non trivial babel/metro configs](https://github.com/react-native-mapbox-gl/maps/pull/778), so we can consume the `maps` library from parent directory directly. Regular apps don't need this complicated setup.
+*Note:* this app is using [non-trivial babel/metro configs](https://github.com/rnmapbox/maps/pull/778), so we can consume the `maps` library from parent directory directly. Regular apps don't need this complicated setup.
 
 <br>
 
@@ -63,7 +63,7 @@ Open up another tab in your Terminal and run
 yarn start
 ```
 
-*Note*: if modules were added to base lib you might need to run `yarn start --reset-cache` because we're using `babel` to [rewrite imports](https://github.com/react-native-mapbox-gl/maps/pull/778)
+*Note*: if modules were added to base lib you might need to run `yarn start --reset-cache` because we're using `babel` to [rewrite imports](https://github.com/rnmapbox/maps/pull/778)
 
 <br>
 
@@ -72,7 +72,7 @@ yarn start
 * Start Android emulator
 * Run `yarn android` from `example` directory
 
-**NOTE**
+### Common Issues
 
 If the build fails make sure gradle has permission to build from cli
 ```
@@ -88,7 +88,9 @@ You can run this with the react-native cli or Xcode
 
 * Run `yarn ios` from `example` directory
 
-**NOTE**
+### Common Issues
+
+If you are using [`nvm`](https://github.com/nvm-sh/nvm), make sure you copy [ios/.xcode.env](./ios/.xcode.env) as `ios/.xcode.env.local` and modify as described inside the file.
 
 If you run into
 

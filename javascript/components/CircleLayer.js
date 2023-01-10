@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {NativeModules, requireNativeComponent} from 'react-native';
+import { NativeModules, requireNativeComponent } from 'react-native';
 
-import {viewPropTypes} from '../utils';
-import {CircleLayerStyleProp} from '../utils/styleMap';
+import { viewPropTypes } from '../utils';
+import { CircleLayerStyleProp } from '../utils/styleMap';
 
 import AbstractLayer from './AbstractLayer';
 
@@ -26,6 +26,7 @@ class CircleLayer extends AbstractLayer {
     /**
      * The source from which to obtain the data to style.
      * If the source has not yet been added to the current style, the behavior is undefined.
+     * Inferred from parent source only if the layer is a direct child to it.
      */
     sourceID: PropTypes.string,
 
@@ -82,7 +83,7 @@ class CircleLayer extends AbstractLayer {
     return (
       <RCTMGLCircleLayer
         testID="rctmglCircleLayer"
-        ref="nativeLayer"
+        ref={this.setNativeLayer}
         {...this.baseProps}
       />
     );
@@ -93,7 +94,7 @@ const RCTMGLCircleLayer = requireNativeComponent(
   NATIVE_MODULE_NAME,
   CircleLayer,
   {
-    nativeOnly: {reactStyle: true},
+    nativeOnly: { reactStyle: true },
   },
 );
 

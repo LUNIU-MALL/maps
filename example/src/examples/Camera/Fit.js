@@ -1,8 +1,7 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {isEqual} from 'lodash';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import MapboxGL from '@react-native-mapbox-gl/maps';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { isEqual } from 'lodash';
+import MapboxGL from '@rnmapbox/maps';
 
 import sheet from '../../styles/sheet';
 import BaseExamplePropTypes from '../common/BaseExamplePropTypes';
@@ -41,7 +40,7 @@ const paddingTop = buildPadding([200, 40, 40, 40]);
 const paddingBottom = buildPadding([40, 40, 200, 40]);
 
 class Fit extends React.Component {
-  static propTypes = {...BaseExamplePropTypes};
+  static propTypes = { ...BaseExamplePropTypes };
 
   constructor(props) {
     super(props);
@@ -62,7 +61,7 @@ class Fit extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const changed = stateKey => {
+    const changed = (stateKey) => {
       // Checking if final state is `undefined` prevents another round of zeroing out in
       // second `componentDidUpdate` call.
       return (
@@ -97,7 +96,7 @@ class Fit extends React.Component {
 
   renderSection = (title, buttons, fade = false) => {
     return (
-      <View style={{paddingBottom: 5, opacity: fade ? 0.5 : 1}}>
+      <View style={{ paddingBottom: 5, opacity: fade ? 0.5 : 1 }}>
         <Text>{title}</Text>
         <ScrollView
           horizontal={true}
@@ -106,8 +105,9 @@ class Fit extends React.Component {
             flexDirection: 'row',
             width: '100%',
             paddingVertical: 10,
-          }}>
-          {buttons.map(button => (
+          }}
+        >
+          {buttons.map((button) => (
             <TouchableOpacity
               key={button.title}
               style={{
@@ -117,7 +117,8 @@ class Fit extends React.Component {
                 backgroundColor: button.selected ? 'coral' : '#d8d8d8',
                 borderRadius: 5,
               }}
-              onPress={button.onPress}>
+              onPress={button.onPress}
+            >
               <Text>{button.title}</Text>
             </TouchableOpacity>
           ))}
@@ -179,29 +180,31 @@ class Fit extends React.Component {
       ['Town (center)', 'townCenter'],
       ['Town (bounds)', 'townBounds'],
       ['undef', undefined],
-    ].map(o => {
+    ].map((o) => {
       return {
         title: `${o[0]}`,
         selected: locationType === o[1],
-        onPress: () => this.setState({locationType: o[1]}),
+        onPress: () => this.setState({ locationType: o[1] }),
       };
     });
 
-    const zoomConfigButtons = [14, 15, 16, 17, 18, 19, 20, undefined].map(n => {
-      return {
-        title: n ? `${n}` : 'undef',
-        selected: zoomLevel === n,
-        onPress: () => this.setState({zoomLevel: n}),
-      };
-    });
+    const zoomConfigButtons = [14, 15, 16, 17, 18, 19, 20, undefined].map(
+      (n) => {
+        return {
+          title: n ? `${n}` : 'undef',
+          selected: zoomLevel === n,
+          onPress: () => this.setState({ zoomLevel: n }),
+        };
+      },
+    );
 
-    const zoomToButtons = [14, 15, 16, 17, 18, 19, 20].map(n => {
+    const zoomToButtons = [14, 15, 16, 17, 18, 19, 20].map((n) => {
       return {
         title: `${n}`,
         selected: cachedZoomLevel === n,
         onPress: () => {
           this.camera.zoomTo(n, 1000);
-          this.setState({cachedZoomLevel: n});
+          this.setState({ cachedZoomLevel: n });
         },
       };
     });
@@ -210,13 +213,14 @@ class Fit extends React.Component {
       <Page {...this.props}>
         <MapboxGL.MapView
           styleURL={MapboxGL.StyleURL.Satellite}
-          style={sheet.matchParent}>
+          style={sheet.matchParent}
+        >
           <MapboxGL.Camera
-            ref={ref => (this.camera = ref)}
+            ref={(ref) => (this.camera = ref)}
             {...this.cameraProps()}
           />
-          <View style={{flex: 1, ...padding}}>
-            <View style={{flex: 1, borderColor: 'white', borderWidth: 4}} />
+          <View style={{ flex: 1, ...padding }}>
+            <View style={{ flex: 1, borderColor: 'white', borderWidth: 4 }} />
           </View>
         </MapboxGL.MapView>
 
@@ -230,7 +234,8 @@ class Fit extends React.Component {
           contentContainerStyle={{
             padding: 10,
             paddingBottom: 20,
-          }}>
+          }}
+        >
           {this.renderSection('Location type', locationTypeButtons)}
 
           {this.renderSection(
@@ -245,7 +250,7 @@ class Fit extends React.Component {
               title: followUserLocation ? 'Enabled' : 'Disabled',
               selected: followUserLocation,
               onPress: () =>
-                this.setState({followUserLocation: !followUserLocation}),
+                this.setState({ followUserLocation: !followUserLocation }),
             },
           ])}
 
@@ -255,7 +260,7 @@ class Fit extends React.Component {
               selected: cachedFlyTo === 'house',
               onPress: () => {
                 this.camera.flyTo(houseCenter);
-                this.setState({cachedFlyTo: 'house'});
+                this.setState({ cachedFlyTo: 'house' });
               },
             },
             {
@@ -263,7 +268,7 @@ class Fit extends React.Component {
               selected: cachedFlyTo === 'town',
               onPress: () => {
                 this.camera.flyTo(townCenter);
-                this.setState({cachedFlyTo: 'town'});
+                this.setState({ cachedFlyTo: 'town' });
               },
             },
           ])}
@@ -274,17 +279,17 @@ class Fit extends React.Component {
             {
               title: 'None',
               selected: isEqual(padding, paddingZero),
-              onPress: () => this.setState({padding: paddingZero}),
+              onPress: () => this.setState({ padding: paddingZero }),
             },
             {
               title: 'Top',
               selected: isEqual(padding, paddingTop),
-              onPress: () => this.setState({padding: paddingTop}),
+              onPress: () => this.setState({ padding: paddingTop }),
             },
             {
               title: 'Bottom',
               selected: isEqual(padding, paddingBottom),
-              onPress: () => this.setState({padding: paddingBottom}),
+              onPress: () => this.setState({ padding: paddingBottom }),
             },
           ])}
         </ScrollView>

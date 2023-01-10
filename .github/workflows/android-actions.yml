@@ -6,8 +6,15 @@ on:
       NVMRC:
         required: true
         type: string
+      MAP_IMPL:
+        description: "The map implementation to use (mapbox,maplibre or mapbox-gl)"
+        default: mapbox
+        required: false
+        type: string
     secrets:
       MAPBOX_ACCESS_TOKEN:
+        required: true
+      MAPBOX_DOWNLOAD_TOKEN:
         required: true
 
 jobs:
@@ -15,18 +22,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup node ${{ inputs.NVMRC }}
-        uses: actions/setup-node@v2.5.0
+        uses: actions/setup-node@v3.5.1
         with:
           node-version: ${{ inputs.NVMRC }}
 
       - name: Setup JDK zulu 11
-        uses: actions/setup-java@v2.4.0
+        uses: actions/setup-java@v3.6.0
         with:
           distribution: 'zulu'
           java-version: '11'
+
+      - run: |
+          mkdir -p ~/.gradle/
+          echo MAPBOX_DOWNLOADS_TOKEN=$MAPBOX_DOWNLOAD_TOKEN > ~/.gradle/gradle.properties
+        working-directory: example
+        env:
+          MAPBOX_DOWNLOAD_TOKEN: ${{ secrets.MAPBOX_DOWNLOAD_TOKEN }}
 
       - run: echo $MAPBOX_ACCESS_TOKEN > ./accesstoken
         working-directory: example
@@ -38,3 +52,5 @@ jobs:
 
       - run: ./gradlew assemble
         working-directory: example/android
+        env:
+          CI_MAP_IMPL: ${{ inputs.MAP_IMPL }}
